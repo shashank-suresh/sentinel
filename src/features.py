@@ -6,8 +6,6 @@ def compute_rejection_rate_baseline(
     df: pd.DataFrame, baseline_threshold: int = 50
 ) -> pd.DataFrame:
     df = df.copy()
-    df["timestamp_created"] = pd.to_datetime(df["timestamp_created"], format="mixed")
-    df = df.set_index("timestamp_created").sort_index()
 
     rejected_trades = df["status"].eq("REJECTED")
     rejected_2h = rejected_trades.rolling("2h", min_periods=1).sum()
@@ -53,4 +51,4 @@ def compute_rejection_rate_baseline(
         df["rejection_rate_delta_baseline"], nan=0.0, posinf=0.0, neginf=0.0
     )
 
-    return df.reset_index()
+    return df

@@ -6,8 +6,6 @@ from src.helpers import standardize_features
 
 def calculate_anomaly_score(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df["timestamp_created"] = pd.to_datetime(df["timestamp_created"], format="mixed")
-    df = df.set_index("timestamp_created").sort_index()
 
     df, vec_cols = standardize_features(
         df, ["rejection_rate_delta_baseline", "rejection_rate_30m"]
@@ -35,4 +33,4 @@ def calculate_anomaly_score(df: pd.DataFrame) -> pd.DataFrame:
 
     df["anomaly_score"] = anomaly_scores
 
-    return df.reset_index()
+    return df

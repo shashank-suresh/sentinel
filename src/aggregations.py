@@ -5,8 +5,6 @@ def compute_rejection_rate_metrics(
     df: pd.DataFrame, counterparty_id: str, warm_threshold: int = 50
 ) -> pd.DataFrame:
     df = df.copy()
-    df["timestamp_created"] = pd.to_datetime(df["timestamp_created"], format="mixed")
-    df = df.set_index("timestamp_created").sort_index()
     df = df.loc[df["counterparty_id"] == counterparty_id, ["status"]]
 
     rejected_trades = df["status"].eq("REJECTED")
@@ -16,4 +14,4 @@ def compute_rejection_rate_metrics(
 
     df["is_window_warm"] = df["total_trade_count"] > warm_threshold
 
-    return df.reset_index()
+    return df
