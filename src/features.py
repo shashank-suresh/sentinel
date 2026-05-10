@@ -1,18 +1,25 @@
 import numpy as np
 import pandas as pd
 
+from src.config import (
+    SHORT_WINDOW,
+    LONG_WINDOW,
+    REJECTED_STATUS,
+    BASELINE_WARM_THRESHOLD,
+)
+
 
 def compute_rejection_rate_baseline(
-    df: pd.DataFrame, baseline_threshold: int = 50
+    df: pd.DataFrame, baseline_threshold: int = BASELINE_WARM_THRESHOLD
 ) -> pd.DataFrame:
     df = df.copy()
 
-    rejected_trades = df["status"].eq("REJECTED")
-    rejected_2h = rejected_trades.rolling("2h", min_periods=1).sum()
-    rejected_2h_sq = (rejected_trades**2).rolling("2h", min_periods=1).sum()
-    total_2h = df["status"].rolling("2h", min_periods=1).count()
+    rejected_trades = df["status"].eq(REJECTED_STATUS)
+    rejected_2h = rejected_trades.rolling(LONG_WINDOW, min_periods=1).sum()
+    rejected_2h_sq = (rejected_trades**2).rolling(LONG_WINDOW, min_periods=1).sum()
+    total_2h = df["status"].rolling(LONG_WINDOW, min_periods=1).count()
 
-    rejected_30m_sq = (rejected_trades**2).rolling("30min", min_periods=1).sum()
+    rejected_30m_sq = (rejected_trades**2).rolling(SHORT_WINDOW, min_periods=1).sum()
 
     rejected_baseline = rejected_2h - df["rejected_trade_count"]
     rejected_baseline_sq = rejected_2h_sq - rejected_30m_sq

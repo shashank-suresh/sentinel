@@ -7,6 +7,8 @@ from enum import Enum
 
 import numpy as np
 
+from src.config import SUCCESS_STATUS, REJECTED_STATUS, DATA_PATH
+
 NORMAL_REJECTION_PROB = 0.03
 ANOMALY_REJECTION_PROB = 0.25
 ANOMALY_DURATION = dt.timedelta(minutes=10)
@@ -16,8 +18,6 @@ TRADING_DAY_END = dt.datetime(2025, 12, 20, 15, 30)
 
 ANOMALY_START = dt.datetime(2025, 12, 20, 12, 15)
 ANOMALY_END = ANOMALY_START + ANOMALY_DURATION
-
-FILEPATH = "data/events.csv"
 
 
 class Instrument(Enum):
@@ -70,7 +70,7 @@ def get_time_gap() -> dt.timedelta:
 def get_event_status(is_anomaly: bool) -> str:
     rejection_prob = ANOMALY_REJECTION_PROB if is_anomaly else NORMAL_REJECTION_PROB
     event_status = np.random.choice(
-        ["SUCCESS", "REJECTED"], p=[1 - rejection_prob, rejection_prob]
+        [SUCCESS_STATUS, REJECTED_STATUS], p=[1 - rejection_prob, rejection_prob]
     )
     return event_status
 
@@ -99,7 +99,7 @@ def generate_event(time_created: dt.datetime, event_status: str) -> Event:
 if __name__ == "__main__":
     current_time = TRADING_DAY_START
 
-    with open(FILEPATH, "a", newline="") as f:
+    with open(DATA_PATH, "a", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[f.name for f in fields(Event)])
         writer.writeheader()
 
