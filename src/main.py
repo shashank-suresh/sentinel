@@ -1,13 +1,15 @@
 import pandas as pd
+from pathlib import Path
 
 from src.aggregations import compute_rejection_rate_metrics
 from src.anomaly import calculate_anomaly_score
 from src.features import compute_rejection_rate_baseline
 from src.ingest import load_events
 
+DATA_PATH = Path("data/events.csv")
+
 if __name__ == "__main__":
-    df = pd.read_csv("data/events.csv")
-    load_events(df)
+    df = load_events(DATA_PATH)
 
     print("Is the dataframe sorted by timestamp_created? ", end="")
     print(df.index.is_monotonic_increasing)
