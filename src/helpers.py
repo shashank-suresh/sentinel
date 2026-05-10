@@ -1,5 +1,4 @@
 from collections.abc import Sequence
-from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -12,7 +11,7 @@ def standardize_features(
     output_cols: str | Sequence[str] | None = None,
     mean: float | None = None,
     std: float | None = None,
-) -> Tuple[pd.DataFrame, List[str]]:
+) -> tuple[pd.DataFrame, list[str]]:
     if isinstance(features, str):
         features = [features]
 
