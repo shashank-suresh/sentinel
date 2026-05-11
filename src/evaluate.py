@@ -2,6 +2,8 @@ import pandas as pd
 import datetime as dt
 import numpy as np
 
+from src.config import EVALUATION_THRESHOLD_STEPS
+
 """
 function evaluate(df, anomaly_start, anomaly_end):
     # 1. Drop rows without a score (warm-up)
@@ -21,8 +23,6 @@ function evaluate(df, anomaly_start, anomaly_end):
     optionally plot precision-recall curve
 """
 
-N = 100
-
 
 def evaluate(
     df: pd.DataFrame, anomaly_start: dt.datetime, anomaly_end: dt.datetime
@@ -36,7 +36,9 @@ def evaluate(
 
     eval_results = []
     for threshold in np.linspace(
-        eval_df["anomaly_score"].min(), eval_df["anomaly_score"].max(), N
+        eval_df["anomaly_score"].min(),
+        eval_df["anomaly_score"].max(),
+        EVALUATION_THRESHOLD_STEPS,
     ):
         predicted = eval_df["anomaly_score"] >= threshold
 
