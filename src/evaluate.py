@@ -4,25 +4,6 @@ import numpy as np
 
 from src.config import EVALUATION_THRESHOLD_STEPS
 
-"""
-function evaluate(df, anomaly_start, anomaly_end):
-    # 1. Drop rows without a score (warm-up)
-    scored = df where anomaly_score is not NaN
-
-    # 2. Derive ground truth
-    scored["is_anomaly"] = scored["timestamp_created"] is between anomaly_start and anomaly_end
-
-    # 3. Sweep thresholds
-    for threshold in linspace(min(anomaly_score), max(anomaly_score), N):
-        predicted = anomaly_score >= threshold
-        compute precision, recall, F1 against is_anomaly
-        record (threshold, precision, recall, F1)
-
-    # 4. Report
-    print summary table
-    optionally plot precision-recall curve
-"""
-
 
 def evaluate(
     df: pd.DataFrame, anomaly_start: dt.datetime, anomaly_end: dt.datetime
