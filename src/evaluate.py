@@ -23,9 +23,9 @@ def evaluate(
     ):
         predicted = eval_df["anomaly_score"] >= threshold
 
-        true_pos = sum(predicted & eval_df["is_anomaly"])
-        false_pos = sum(predicted & ~eval_df["is_anomaly"])
-        false_neg = sum((~predicted) & eval_df["is_anomaly"])
+        true_pos = (predicted & eval_df["is_anomaly"]).sum()
+        false_pos = (predicted & ~eval_df["is_anomaly"]).sum()
+        false_neg = ((~predicted) & eval_df["is_anomaly"]).sum()
 
         total_predicted_pos = true_pos + false_pos
         total_actual_pos = true_pos + false_neg
