@@ -1,7 +1,7 @@
 [project]
 name = "sentinel"
 version = "0.1.0"
-description = "Add your description here"
+description = "Trade event anomaly detection pipeline"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
