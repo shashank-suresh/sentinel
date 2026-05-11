@@ -62,7 +62,10 @@ if __name__ == "__main__":
         cp_df.loc[start_ts : start_ts + pd.Timedelta(minutes=10)]["anomaly_score"].max()
     )
 
-    evaluate(cp_df, ANOMALY_START, ANOMALY_END)
+    eval_results = evaluate(cp_df, ANOMALY_START, ANOMALY_END)
+
+    for res in eval_results:
+        print(res)
 
     print(cp_df[(ANOMALY_START <= cp_df.index) & (cp_df.index <= ANOMALY_END)].shape[0])
     print(cp_df[cp_df["anomaly_score"].notna()].shape[0])

@@ -24,7 +24,9 @@ function evaluate(df, anomaly_start, anomaly_end):
 N = 100
 
 
-def evaluate(df: pd.DataFrame, anomaly_start: dt.datetime, anomaly_end: dt.datetime):
+def evaluate(
+    df: pd.DataFrame, anomaly_start: dt.datetime, anomaly_end: dt.datetime
+) -> list[tuple[float, float, float, float]]:
     eval_df = df.copy()
     eval_df = eval_df[eval_df["anomaly_score"].notna()]
 
@@ -32,6 +34,7 @@ def evaluate(df: pd.DataFrame, anomaly_start: dt.datetime, anomaly_end: dt.datet
         eval_df.index <= anomaly_end
     )
 
+    eval_results = []
     for threshold in np.linspace(
         eval_df["anomaly_score"].min(), eval_df["anomaly_score"].max(), N
     ):
@@ -51,4 +54,6 @@ def evaluate(df: pd.DataFrame, anomaly_start: dt.datetime, anomaly_end: dt.datet
             else 0
         )
 
-        print(threshold, precision, recall, f1, sep=" ", end="\n")
+        eval_results.append((threshold, precision, recall, f1))
+
+    return eval_results
