@@ -7,7 +7,7 @@ from enum import Enum
 
 import numpy as np
 
-from src.config import SUCCESS_STATUS, REJECTED_STATUS, DATA_PATH
+from src.config import SUCCESS_STATUS, REJECTED_STATUS, DATA_PATH, TEST_DATA_PATH
 
 NORMAL_REJECTION_PROB = 0.03
 ANOMALY_REJECTION_PROB = 0.25
@@ -18,6 +18,11 @@ TRADING_DAY_END = dt.datetime(2025, 12, 20, 15, 30)
 
 ANOMALY_START = dt.datetime(2025, 12, 20, 12, 15)
 ANOMALY_END = ANOMALY_START + ANOMALY_DURATION
+
+TEST_TRADING_DAY_START = dt.datetime(2025, 12, 21, 9, 15)
+TEST_TRADING_DAY_END = dt.datetime(2025, 12, 21, 15, 30)
+TEST_ANOMALY_START = dt.datetime(2025, 12, 21, 10, 30)
+TEST_ANOMALY_END = TEST_ANOMALY_START + ANOMALY_DURATION
 
 
 class Instrument(Enum):
@@ -99,12 +104,28 @@ def generate_event(time_created: dt.datetime, event_status: str) -> Event:
 if __name__ == "__main__":
     current_time = TRADING_DAY_START
 
-    with open(DATA_PATH, "a", newline="") as f:
+    with open(DATA_PATH, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[f.name for f in fields(Event)])
         writer.writeheader()
 
         while current_time <= TRADING_DAY_END:
             if ANOMALY_START <= current_time <= ANOMALY_END:
+                event_status = get_event_status(True)
+            else:
+                event_status = get_event_status(False)
+
+            event = generate_event(current_time, event_status)
+            current_time += get_time_gap()
+
+            writer.writerow({k: serialize(v) for k, v in asdict(event).items()})
+
+    current_time = TEST_TRADING_DAY_START
+    with open(TEST_DATA_PATH, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=[f.name for f in fields(Event)])
+        writer.writeheader()
+
+        while current_time <= TEST_TRADING_DAY_END:
+            if TEST_ANOMALY_START <= current_time <= TEST_ANOMALY_END:
                 event_status = get_event_status(True)
             else:
                 event_status = get_event_status(False)
